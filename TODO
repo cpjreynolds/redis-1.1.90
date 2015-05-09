@@ -1,0 +1,70 @@
+Redis TODO and Roadmap
+
+VERSION 1.2 TODO (Zsets, Integer encoding, Append only journal)
+===============================================================
+
+Most of the features already implemented for this release. The following is a list of the missing things in order to release the first beta tar.gz:
+
+* Write docs for the "STORE" operaiton of SORT. Link to the article about SORT by written by defunkt.
+
+VERSION 1.4 TODO (Hash type)
+============================
+
+* Hashes (HSET, HGET, HEXISTS, HLEN, ...).
+* Specially encoded memory-saving integer sets.
+* An utility able to export an .rdb file into a text-only JSON dump, we can't live anymore without such a tool. Probably an extension to redis-cli.
+* List ops like L/RPUSH L/RPOP should return the new list length.
+
+VERSION 1.6 TODO (Virtual memory)
+=================================
+
+* Redis Virtual Memory for datasets bigger than RAM (http://groups.google.com/group/redis-db/msg/752997c7b38553cd)
+
+VERSION 1.8 TODO (Fault tollerant sharding)
+===========================================
+
+* Redis-cluster, a fast intermediate layer (proxy) that implements consistent hashing and fault tollerant nodes handling.
+
+Interesting readings about this:
+
+    - http://ayende.com/Blog/archive/2009/04/06/designing-rhino-dht-a-fault-tolerant-dynamically-distributed-hash.aspx
+
+VERSION 2.0 TODO (Optimizations and latency)
+============================================
+
+* Lower the CPU usage.
+* Lower the RAM usage everywhere possible.
+* Use epool and alike to rewrite ae.c for Linux and other platforms suppporting fater-than-select() mutiplexing APIs.
+* Implement an UDP interface for low-latency GET/SET operations.
+
+VERSION 2.2 TODO (Optimizations and latency)
+============================================
+
+* JSON command able to access data serialized in JSON format. For instance if I've a key foobar with a json object I can alter the "name" file using somthing like: "JSON SET foobar name Kevin". We should have GET and INCRBY as well.
+
+SHORT/LONG TERM RANDOM TODO ITEMS
+=================================
+
+Most of this can be seen just as proposals, the fact they are in this list
+it's not a guarantee they'll ever get implemented ;)
+
+* Move dict.c from hash table to skip list, in order to avoid the blocking resize operation needed for the hash table.
+* FORK command (fork()s executing the commands received by the current
+  client in the new process). Hint: large SORTs can use more cores,
+  copy-on-write will avoid memory problems.
+* DUP command? DUP srckey dstkey, creates an exact clone of srckey value in dstkey.
+* SORT: Don't copy the list into a vector when BY argument is constant.
+* Write the hash table size of every db in the dump, so that Redis can resize the hash table just one time when loading a big DB.
+* LOCK / TRYLOCK / UNLOCK as described many times in the google group
+* Replication automated tests
+* Byte Array type (BA prefixed commands): BASETBIT BAGETBIT BASETU8 U16 U32 U64 S8 S16 S32 S64, ability to atomically INCRBY all the base types. BARANGE to get a range of bytes as a bulk value, BASETRANGE to set a range of bytes.
+* zmalloc() should avoid to add a private header for archs where there is some other kind of libc-specific way to get the size of a malloced block. Already done for Mac OS X.
+* Read-only mode.
+* Pattern-matching replication.
+
+DOCUMENTATION WISHLIST
+======================
+
+* Page explaining tips to reduce memory usage.
+* A Sorted sets HOWTO
+
